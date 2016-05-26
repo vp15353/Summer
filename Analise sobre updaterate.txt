@@ -1,0 +1,17 @@
+Testes U3-HV 
+
+Update Rate:
+
+Teste indo de 0-3V  
+
+Tentativa 10Hz  OK!
+Tentativa 12Hz  Measured 11.90
+Tentativa 15Hz  Measured 14.80
+
+Tentativa 30Hz > Achieves and goes to maximum voltages
+Acima de 40Hz nao chega mais nos extremos      para 0-3V para Deltas pequenos, consegue-se obte frequencias bem maiores
+
+
+Using LJTick-DAC
+
+MUCH HIGHER UPDATE RATE POSSIBLE 150Hz plus confirmed , definetly going with that.
