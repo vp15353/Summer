@@ -11,7 +11,7 @@ data=df_mov_info(fn);
 
 %Ask center
 
-PlotData.angle=[0,0]
+PlotData.angle=[0,0];
 res=0.001;
 n=0;
 
