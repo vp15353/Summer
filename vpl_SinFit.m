@@ -1,4 +1,4 @@
-function vpl_SinFit(x,y)
+function coefs=vpl_SinFit(x,y)
 yu = max(y);
 yl = min(y);
 yr = (yu-yl);                               % Range of ‘y’
@@ -14,7 +14,7 @@ xp = linspace(min(x),max(x));
 SStot=sum((y-ym).^2);
 SSres=sum((y-fit(coefs,x)).^2);
 Rsqr=1-SSres/SStot;
-
+1
 figure(1)
 plot(x,y,'b',  xp,fit(coefs,xp), 'r')
 grid
