@@ -14,8 +14,8 @@ xp = linspace(min(x),max(x));
 SStot=sum((y-ym).^2);
 SSres=sum((y-fit(coefs,x)).^2);
 Rsqr=1-SSres/SStot;
-1
-figure(1)
+
+figure
 plot(x,y,'b',  xp,fit(coefs,xp), 'r')
 grid
 display(strcat('Amplitude:',num2str(coefs(1))))

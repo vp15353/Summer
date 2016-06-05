@@ -1,13 +1,10 @@
-function Data=vpl_ReadRPM(fn)
-
+function [Angle,Time]=vpl_ReadRPM(fn)
+clc
+clearvars -except fn
+close all
 %Get movie data
 
 data=df_mov_info(fn);
-
-
-%Read Move File
-
-
 
 %Ask center
 
@@ -19,17 +16,20 @@ n=0;
 
 FirstFrame=df_mov_read(fn,1);
 imshow(FirstFrame)
-[center.x,center.y]=ginput(1)
-[rad.x,rad.y]=ginput(1)
+title('Select Center')
+[center.x,center.y]=ginput(1);
+title('Select point on object')
+[rad.x,rad.y]=ginput(1);
 close all
 r=sqrt((rad.x-center.x)^2+(rad.y-center.y)^2);
 
 
 
-figure
-hold on
+%figure
+%hold on
 
-
+h = waitbar(0,'Processing...');
+steps=data.nMovieFrames;
 for i=1:1:data.nMovieFrames
 
     
@@ -65,14 +65,43 @@ end
             
             PlotData.angle(i)=k+(n*2*pi);
             PlotData.frame(i)=i;
-            plot(PlotData.frame(i)/data.iFrameRate,PlotData.angle(i),'*')
-            drawnow;
+           % plot(PlotData.frame(i)/data.iFrameRate,PlotData.angle(i),'*')
+            %ttl=strcat('Frame :',num2str(i),'/',num2str(data.nMovieFrames));
+            %title(ttl)
+            %drawnow;
             break
            
         end
     end
-    i
-    
+ waitbar(i/steps)   
 end
-save
-disp('end')
+close(h)
+disp('Correcting any mistakes');
+
+for i=1:(length(PlotData.angle)-1)
+    if PlotData.angle(i+1)-PlotData.angle(i)>6 %Rough aproximation for 2pi
+        PlotData.angle((i+1):end)=PlotData.angle((i+1):end)-2*pi;
+    end
+end
+
+Angle=PlotData.angle;
+Time=PlotData.frame ./ data.iFrameRate;
+diffangle=diff(Angle)./diff(Time);
+difftime=Time(2:end);
+Sdiffangle=fastsmooth(diffangle,8,1,1);
+plot(Time,Angle)
+drawnow
+figure
+hold on
+plot(difftime,diffangle,'b')
+plot(difftime,Sdiffangle,'r')
+drawnow
+waitfor(msgbox('Select Start and Endpoint of sample to be sinus fitted'));
+start_end=ginput(2);
+indexes=find(Time>=start_end(1,1) & Time<=start_end(2,1));
+coefs=vpl_SinFit(difftime(indexes),Sdiffangle(indexes));
+savename=strcat('dados_',fn,'.mat');
+save(savename)
+
+
+disp('END of analysis')
